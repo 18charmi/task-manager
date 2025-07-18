@@ -33,6 +33,7 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <StoreProvider>
+
             <ProtectedRoute>
               {children}
             </ProtectedRoute>

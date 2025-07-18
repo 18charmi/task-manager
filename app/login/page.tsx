@@ -10,6 +10,7 @@ import { PAGES } from "@/utils/constant"
 import { schema } from "./helper"
 import { LoginForm } from "@/types/user"
 import Link from "next/link"
+import { useStore } from "@/store"
 
 async function loginUser(_data: LoginForm) {
     // TODO: define api call
@@ -24,11 +25,17 @@ export default function Login() {
     } = useForm<LoginForm>({
         resolver: yupResolver(schema)
     })
+    const { login, fetching } = useStore((s) => ({
+        login: s.login,
+        fetching: s.fetching,
+    }));
+
     const onSubmit: SubmitHandler<LoginForm> = async (data) => {
-        const { success, message } = await loginUser(data);
-        if (success) {
-            router.push(`/${PAGES.DASHBOARD}`)
-        }
+        await login(data);
+        // const { success, message } = 
+        // if (success) {
+        //     router.push(`/${PAGES.DASHBOARD}`)
+        // }
     }
 
     return (
@@ -48,7 +55,7 @@ export default function Login() {
                     type="password"
                     helperText={errors.password?.message}
                 />
-                <CustomButton className="!mt-4" label="Login" type="submit" fullWidth />
+                <CustomButton className="!mt-4" label="Login" type="submit" fullWidth loading={fetching} />
 
 
             </form>
