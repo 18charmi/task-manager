@@ -8,38 +8,36 @@ import { Container } from "@mui/material"
 import CustomTypography from "@/components/CustomTypography"
 import { PAGES } from "@/utils/constant"
 import { schema } from "./helper"
-import { LoginForm } from "@/types/user"
+import { RegisterForm } from "@/types/user"
 import { useAlert } from "@/context/AlertContext"
 import Link from "next/link"
 
-async function loginUser(_data: LoginForm) {
+async function registerUser(_data: RegisterForm) {
     // TODO: define api call
     return { success: true, message: "" }
 }
-export default function Login() {
+export default function Register() {
     const router = useRouter();
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginForm>({
+    } = useForm<RegisterForm>({
         resolver: yupResolver(schema)
     })
     const { showAlert } = useAlert();
-    const onSubmit: SubmitHandler<LoginForm> = async (data) => {
-        const { success, message } = await loginUser(data);
+    const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
+        const { success, message } = await registerUser(data);
         showAlert(message, success ? "success" : "error");
         if (success) {
-            router.push(`/${PAGES.DASHBOARD}`)
+            router.push(`/${PAGES.LOGIN}`)
         }
     }
 
     return (
         <Container maxWidth="sm" className="flex flex-col items-center justify-center min-h-screen gap-4">
-            <CustomTypography text="Welcome Back" variant="h2" component="h2" letterSpacing={-1} className="text-gray-600" />
-            <form onSubmit={handleSubmit(onSubmit)} >
-
-
+            <CustomTypography text="Register" variant="h3" component="h3" letterSpacing={-1} className="text-gray-600" />
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
                 <CustomInput label="Username"
                     {...register("username")}
                     error={!!errors.username}
@@ -51,13 +49,12 @@ export default function Login() {
                     type="password"
                     helperText={errors.password?.message}
                 />
-                <CustomButton className="!mt-4" label="Login" type="submit" fullWidth />
 
-
+                <CustomButton className="!mt-4" label="Register" type="submit" fullWidth />
             </form>
             <div>
-                <label>Don't have account ? </label>
-                <Link href={`/${PAGES.REGISTER}`} className="text-blue-600 font-bold">Register here</Link>
+                <label>Already have account ? </label>
+                <Link href={`/${PAGES.LOGIN}`} className="text-blue-600 font-bold">Login </Link>
             </div>
         </Container>
     )

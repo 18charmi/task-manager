@@ -1,4 +1,5 @@
 export const PAGES = {
     DASHBOARD: "dashboard",
-    LOGIN: "login"
+    LOGIN: "login",
+    REGISTER: "register"
 }
