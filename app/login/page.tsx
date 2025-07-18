@@ -9,7 +9,6 @@ import CustomTypography from "@/components/CustomTypography"
 import { PAGES } from "@/utils/constant"
 import { schema } from "./helper"
 import { LoginForm } from "@/types/user"
-import { useAlert } from "@/context/AlertContext"
 import Link from "next/link"
 
 async function loginUser(_data: LoginForm) {
@@ -25,10 +24,8 @@ export default function Login() {
     } = useForm<LoginForm>({
         resolver: yupResolver(schema)
     })
-    const { showAlert } = useAlert();
     const onSubmit: SubmitHandler<LoginForm> = async (data) => {
         const { success, message } = await loginUser(data);
-        showAlert(message, success ? "success" : "error");
         if (success) {
             router.push(`/${PAGES.DASHBOARD}`)
         }

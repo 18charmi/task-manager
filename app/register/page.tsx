@@ -9,7 +9,6 @@ import CustomTypography from "@/components/CustomTypography"
 import { PAGES } from "@/utils/constant"
 import { schema } from "./helper"
 import { RegisterForm } from "@/types/user"
-import { useAlert } from "@/context/AlertContext"
 import Link from "next/link"
 
 async function registerUser(_data: RegisterForm) {
@@ -25,10 +24,8 @@ export default function Register() {
     } = useForm<RegisterForm>({
         resolver: yupResolver(schema)
     })
-    const { showAlert } = useAlert();
     const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
         const { success, message } = await registerUser(data);
-        showAlert(message, success ? "success" : "error");
         if (success) {
             router.push(`/${PAGES.LOGIN}`)
         }

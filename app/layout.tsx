@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import { AlertProvider } from "@/context/AlertContext";
+import ProtectedRoute from "@/context/ProtectedRoute";
+import StoreProvider from "@/store/StoreProvider";
+import { AlertMessage } from "@/components/AlertMessage";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +32,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppRouterCacheProvider>
-          <AlertProvider>
-            {children}
-          </AlertProvider>
+          <StoreProvider>
+            <ProtectedRoute>
+              {children}
+            </ProtectedRoute>
+            <AlertMessage />
+          </StoreProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
