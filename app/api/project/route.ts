@@ -5,7 +5,7 @@ import { Project, Task } from "@/types/project";
 
 // List all projects
 export async function GET() {
-  return NextResponse.json({ projects });
+  return NextResponse.json({ data: projects });
 }
 
 // Create a new project
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     tasks: [],
   };
   projects.push(project);
-  return NextResponse.json({ project });
+  return NextResponse.json({ data: project, message: "New project created" });
 }
 
 export async function PUT(req: NextRequest) {
@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest) {
     }
     project.title = title ?? project.title;
     project.description = description ?? project.description;
-    return NextResponse.json({ project });
+    return NextResponse.json({ data: project, message: "Project has been updated" });
   }
 
   // ADD TASK
@@ -50,7 +50,7 @@ export async function PUT(req: NextRequest) {
       projectId: projectId
     };
     project.tasks.push(task);
-    return NextResponse.json({ task, project });
+    return NextResponse.json({ data: project, message: "New task added" });
   }
 
   // UPDATE TASK 
@@ -66,7 +66,7 @@ export async function PUT(req: NextRequest) {
     }
     if (title) task.title = title;
     if (status) task.status = status;
-    return NextResponse.json({ task, project });
+    return NextResponse.json({ data: project, message: "Task has been updated" });
   }
 
   return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
