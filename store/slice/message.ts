@@ -8,31 +8,25 @@ interface IResponseMessage {
 }
 
 interface IResponseMessageStore {
-  message: [] | IResponseMessage[];
+  message: IResponseMessage[];
   addMessage: (d: Pick<IResponseMessage, 'title' | 'severity'>) => void;
-  removeMessage: (d: number) => void;
+  removeMessage: (id: number) => void;
 }
 
-const createResponseMessage = create<IResponseMessageStore>()((set, get) => ({
+export const useResponseMessage = create<IResponseMessageStore>((set) => ({
   message: [],
-  addMessage: (msg) => {
-    set((state) => {
-      const newId = state.message.length + 1;
-      return { message: [...state.message, { ...msg, id: newId }] };
-    });
-  },
+  addMessage: (msg) =>
+    set((state) => ({
+      message: [
+        ...state.message,
+        {
+          ...msg,
+          id: Date.now(),
+        },
+      ],
+    })),
   removeMessage: (id) =>
-    set((state) => {
-      let messageIndex = state.message.findIndex((m) => m.id === id);
-      return messageIndex !== -1
-        ? {
-            message: [
-              ...state.message.splice(0, messageIndex),
-              ...state.message.splice(messageIndex + 1),
-            ],
-          }
-        : state;
-    }),
+    set((state) => ({
+      message: state.message.filter((m) => m.id !== id),
+    })),
 }));
-
-export { createResponseMessage };

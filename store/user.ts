@@ -1,81 +1,72 @@
-import { StateCreator } from 'zustand';
-import { createResponseMessage } from './slice/message';
-import { LoginForm, LoginRes } from '@/types/user';
+import { create } from "zustand";
+import { LoginForm, RegisterForm, User } from "@/types/user";
+import {
+  userLogin,
+  userLogout,
+  userSignup,
+  userDetails,
+} from "@/services/ApiHandler";
+import { useResponseMessage } from "./slice/message";
 
-const useResponseMessage = createResponseMessage.getState();
-
-interface IUserStore {
-  fetching: boolean;
+interface UserStore {
+  user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  user: Partial<LoginRes> | null;
-  login: (d: LoginForm) => void;
-  logout: () => void;
-  loadUserDetails: () => void;
+  fetching: boolean;
+
+  login: (d: LoginForm) => Promise<boolean>;
+  logout: () => Promise<void>;
+  signup: (d: RegisterForm) => Promise<boolean>;
+  loadUserDetails: () => Promise<void>;
 }
 
-async function userLogin(d: any) {
-  // TODO  add handler
-  return { data: {}, success: !true, message: "" }
-}
-async function userLogout() {
-  // TODO  add handler
-  return { data: {}, success: true, message: "" }
-
-}
-async function userDetail() {
-  // TODO  add handler
-  return { data: {}, success: true, message: "" }
-
-}
-const createUserStore: StateCreator<IUserStore> = (set, get) => ({
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
   isAuthenticated: false,
   loading: true,
-  user: null,
   fetching: false,
-  login: async (d) => {
+
+  login: async (payload) => {
     set({ fetching: true });
-    let { data, message, success } = (await userLogin(d));
+    const { success, message, data } = await userLogin(payload);
 
     if (success) {
-      set(() => ({
-        user: data,
-        isAuthenticated: true,
-        fetching: false,
-      }));
+      set({ user: data, isAuthenticated: true, fetching: false, loading: false });
     } else {
-      useResponseMessage.addMessage({
-        title: 'Login Failed',
-        severity: 'error',
+      useResponseMessage.getState().addMessage({
+        title: message,
+        severity: "error",
       });
-      set(() => ({
-        user: null,
-        isAuthenticated: false,
-        fetching: false,
-      }));
+      set({ user: null, isAuthenticated: false, fetching: false, loading: false });
     }
+    return success;
   },
+
   logout: async () => {
-    const { success } = (await userLogout());
-    if (success) {
-      set((s) => ({ user: null, isAuthenticated: false }));
-    }
+    await userLogout();
+    set({ user: null, isAuthenticated: false, loading: false });
   },
+
+  signup: async (payload) => {
+    set({ fetching: true });
+    const { success, message } = await userSignup(payload);
+    useResponseMessage.getState().addMessage({
+      title: message,
+      severity: success ? "success" : "error",
+    });
+    set({ user: null, isAuthenticated: false, fetching: false }); // Only login sets authenticated
+    return success;
+  },
+
   loadUserDetails: async () => {
-    const { success, data } = (await userDetail());
-
+    set({ loading: true });
+    const { success, data } = await userDetails();
     if (success) {
-      set(() => ({
-        user: data,
-        isAuthenticated: true,
-        loading: false,
-      }));
+      set({ user: data, isAuthenticated: true, loading: false });
     } else {
-      get().logout();
-      set(() => ({ user: null, isAuthenticated: false, loading: false }));
+      set({ user: null, isAuthenticated: false, loading: false });
     }
   },
-});
+}));
 
-export { createUserStore };
-export type { IUserStore };
+export type { UserStore };
