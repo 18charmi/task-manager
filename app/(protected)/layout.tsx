@@ -1,7 +1,9 @@
-'use client';
 
+import Header from "@/components/Header";
 import ProtectedLayout from "@/components/ProtectedRoute";
 
 export default function ProtectedAppLayout({ children }: { children: React.ReactNode }) {
-  return <ProtectedLayout>{children}</ProtectedLayout>
+  return <ProtectedLayout>
+    <Header />
+    {children}</ProtectedLayout>
 }
