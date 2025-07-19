@@ -4,21 +4,21 @@ import { handleApiResponse } from './helper';
 
 export function userLogin(data: LoginForm) {
   return handleApiResponse<User>(
-    axiosClient.post('/auth/login', data)
+    axiosClient.post('/auth/user', { ...data, action: 'login', })
   );
 }
 export function userSignup(data: RegisterForm) {
   return handleApiResponse<{}>(
-    axiosClient.post('/auth/signup', data)
+    axiosClient.post('/auth/user', { ...data, action: 'signup' })
   );
 }
 
 export function userLogout() {
-  return handleApiResponse<{}>(axiosClient.post('/auth/logout'));
+  return handleApiResponse<{}>(axiosClient.delete('/auth/user'));
 }
 
 export function userDetails() {
   return handleApiResponse<User>(
-    axiosClient.get('/auth/profile')
+    axiosClient.get('/auth/user')
   );
 }
