@@ -53,7 +53,7 @@ export default function Login() {
 
             </form>
             <div>
-                <label>Don't have account ? </label>
+                <label>Don`t have account ? </label>
                 <Link href={`/${PAGES.REGISTER}`} className="text-blue-600 font-bold">Register here</Link>
             </div>
         </Container>
