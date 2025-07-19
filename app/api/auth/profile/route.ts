@@ -12,7 +12,7 @@ export async function GET() {
 
     try {
         const userDetails = validateToken(token);
-        return NextResponse.json({ message: 'Success', user: userDetails });
+        return NextResponse.json({ message: 'Success', data: userDetails });
     } catch {
         return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
     }
