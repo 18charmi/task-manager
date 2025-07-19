@@ -3,4 +3,4 @@ export const PAGES = {
     LOGIN: "login",
     REGISTER: "register"
 }
-export const PUBLIC_PAGES = [PAGES.LOGIN, PAGES.REGISTER];
+export const PUBLIC_ROUTES = ["/" + PAGES.LOGIN, "/" + PAGES.REGISTER];

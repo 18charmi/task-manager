@@ -10,11 +10,8 @@ import { PAGES } from "@/utils/constant"
 import { schema } from "./helper"
 import { RegisterForm } from "@/types/user"
 import Link from "next/link"
+import { useUserStore } from "@/store/user"
 
-async function registerUser(_data: RegisterForm) {
-    // TODO: define api call
-    return { success: true, message: "" }
-}
 export default function Register() {
     const router = useRouter();
     const {
@@ -24,8 +21,11 @@ export default function Register() {
     } = useForm<RegisterForm>({
         resolver: yupResolver(schema)
     })
+    const signup = useUserStore(s => s.signup);
+    const fetching = useUserStore(s => s.fetching);
+
     const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
-        const { success, message } = await registerUser(data);
+        const success = await signup(data);
         if (success) {
             router.push(`/${PAGES.LOGIN}`)
         }
@@ -47,7 +47,7 @@ export default function Register() {
                     helperText={errors.password?.message}
                 />
 
-                <CustomButton className="!mt-4" label="Register" type="submit" fullWidth />
+                <CustomButton className="!mt-4" label="Register" type="submit" fullWidth loading={fetching} />
             </form>
             <div>
                 <label>Already have account ? </label>

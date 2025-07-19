@@ -54,7 +54,7 @@ export const useUserStore = create<UserStore>((set) => ({
       title: message,
       severity: success ? "success" : "error",
     });
-    set({ user: null, isAuthenticated: false, fetching: false }); // Only login sets authenticated
+    set({ user: null, isAuthenticated: false, fetching: false });
     return success;
   },
 
@@ -68,5 +68,3 @@ export const useUserStore = create<UserStore>((set) => ({
     }
   },
 }));
-
-export type { UserStore };
